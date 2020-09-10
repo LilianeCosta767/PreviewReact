@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import './App.css';
@@ -77,6 +77,8 @@ const fetchUrl = (url) => {
 }
 
 function App() {
+  
+  const [previewData, setPreviewData] =  useState(null);
 
   const onBlur = (e) => {
     const url = getUrl(e.target.value);
@@ -84,14 +86,26 @@ function App() {
     fetchUrl(url)
       .then(parseHTML)
       .then(getPreviewData)
+      .then(setPreviewData)
       .then(console.log)
       .catch(console.error);
   }
+
+  console.log('previewData: ', previewData);
 
   return (
     <div>
       <h1>React Link Preview</h1>
       <input type="text" onBlur={onBlur}/> 
+      {previewData && (
+        <div>
+          <h2>{previewData.title}</h2>
+          <span>{previewData.site}</span>
+          <a href={previewData.link}>Leia Mais... </a>
+          <p>{previewData.desciption}</p>
+          <img src={previewData.image} width="250" alt={previewData.title}/>
+        </div>
+      )}
     </div>
   );
 }
