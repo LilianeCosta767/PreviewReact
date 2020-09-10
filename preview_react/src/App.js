@@ -5,8 +5,37 @@ import './App.css';
 
 const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
+// pegando apenas os itens que precisamos para criar o preview
+const getPreviewData = (tags) => {
+  const result = tags.reduce((previewData, item) => {
+    switch(item.tag) {
+      case 'og:title':
+        previewData.title = item.value;
+        break;
+      case 'og:url':
+        previewData.link = item.value;
+        break;
+      case 'og:description':
+        previewData.desciption = item.value;
+        break;
+      case 'og:site_name':
+        previewData.site = item.value;
+        break;
+      case 'og:image':
+        previewData.image = item.value;
+        break;
+      default: 
+        break;
+    }
+    return previewData;
+  }, {});
+
+  return Promise.resolve(result);
+}
+
 const parseHTML = (html) => {
   const $ = cheerio.load(html);
+  const meta = [];
 
   $('head meta').map((i, item) => {
     if(!item.attribs) return null;
@@ -16,9 +45,11 @@ const parseHTML = (html) => {
 
     if (!property || !content) return null;
 
-    console.log(property, content);
-    
+    meta.push({ tag: property, value: content });
+    return null;
   }); // pega todas as tags meta do html
+
+  return Promise.resolve(meta);
 }
 
 // função para pegar a url informada no input
@@ -52,6 +83,7 @@ function App() {
     if(!url) return null;
     fetchUrl(url)
       .then(parseHTML)
+      .then(getPreviewData)
       .then(console.log)
       .catch(console.error);
   }
