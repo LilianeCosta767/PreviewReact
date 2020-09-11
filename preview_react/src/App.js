@@ -94,16 +94,24 @@ function App() {
   console.log('previewData: ', previewData);
 
   return (
-    <div>
-      <h1>React Link Preview</h1>
-      <input type="text" onBlur={onBlur}/> 
+    <div className="container mt-5">
+      <div className="row">
+        <div className="col-6">
+          <label>Url</label>
+            <input type="text" onBlur={onBlur}/> 
+        </div>
+      </div>
       {previewData && (
-        <div>
-          <h2>{previewData.title}</h2>
-          <span>{previewData.site}</span>
-          <a href={previewData.link}>Leia Mais... </a>
-          <p>{previewData.desciption}</p>
-          <img src={previewData.image} width="250" alt={previewData.title}/>
+        <div className="row">
+          <div className="card col-6 pt-3">
+            <img className="card-img-top" src={previewData.image} width="250" alt={previewData.title}/>
+            <div className="card-body">
+              <small>{previewData.site}</small>
+              <h5 className="card-title">{previewData.title}</h5>
+              <p>{previewData.desciption}</p>
+              <a href={previewData.link} target="_blank" rel="noopener noreferrer" className="btn btn-primary">Leia Mais... </a>
+            </div>
+          </div>
         </div>
       )}
     </div>
